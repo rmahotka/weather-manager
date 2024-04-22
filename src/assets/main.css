@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* overflow: hidden; */
+  background: rgb(161, 195, 251);
+  background: linear-gradient(
+    17deg,
+    rgba(161, 195, 251, 1) 0%,
+    rgba(146, 206, 242, 1) 49%,
+    rgba(140, 160, 206, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
