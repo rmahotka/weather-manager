@@ -17,6 +17,8 @@
       </svg>
       <input
         type="text"
+        v-model="inputCity"
+        @keyup.enter="emit('getCity')"
         placeholder="Search city"
         class="bg-inherit border-b border-b-gray-300 outline-0 pl-6 text-sm w-full"
       />
@@ -25,7 +27,7 @@
       <div class="relative">
         <img src="@/assets/img/weather-main/drizzle.png" alt="" />
         <p class="text-9xl font-semibold absolute bottom-16 right-3 opacity-75 text-gray-950">
-          20<sup class="ml-2">ͦ</sup>
+          <span>{{ weatherInfo?.main?.temp }}<sup class="ml-2">ͦ</sup></span>
         </p>
         <div class="flex justify-between mt-4">
           <div class="flex items-center">
@@ -86,13 +88,26 @@
         <p>Uhundestrorm</p>
       </div>
       <div class="text-center relative">
-        <p class="mb-1 z-20 text-2xl font-bold text-gray-600 block relative">10 Octouber 2024</p>
-        <p class="text-xl">Minsk, Br</p>
+        <p class="mb-1 z-20 text-lg font-bold text-gray-600 block relative">10 Octouber 2024</p>
+        <p class="text-sm text-gray-700">Minsk, Br</p>
       </div>
     </div>
   </section>
 </template>
 
-<script setup></script>
+<script setup>
+import { defineEmits } from 'vue'
+
+const inputCity = defineModel('inputCity')
+
+defineProps({
+  weatherInfo: {
+    type: [Object, null],
+    required: true
+  }
+})
+
+const emit = defineEmits(['getCity'])
+</script>
 
 <style lang="scss" scoped></style>

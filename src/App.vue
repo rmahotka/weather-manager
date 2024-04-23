@@ -1,13 +1,39 @@
 <template>
   <main class="main rounded-xl">
-    <WeatherSummary />
+    <WeatherSummary
+      :weatherInfo="resultWeather"
+      v-model:inputCity="locationCity"
+      @get-city="getWeather"
+    />
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
+import { computed, onMounted, ref, watch } from 'vue'
 import WeatherSummary from './components/WeatherSummary.vue'
+
+const locationCity = ref('Kobrin')
+const resultWeather = ref(null)
+
+const getWeather = async () => {
+  try {
+    const response = await fetch(
+      `https:/${import.meta.env.VITE_API_URL}?APPID=${import.meta.env.VITE_API_KEY}&q=${locationCity.value}&units=metric`
+    )
+    let data = response.json()
+    resultWeather.value = data
+
+    console.log(resultWeather.value)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+watch(resultWeather.value)
+
+onMounted(() => {
+  getWeather()
+})
 </script>
 
 <style lang="scss" scoped>
