@@ -13,40 +13,37 @@ const getWeather = async () => {
     )
     let data = await response.json()
     weatherInfo.value = data
+    console.log(weatherInfo.value)
   } catch (err) {
     console.error(err)
   }
 }
 
 const sunSet = computed(() => {
-  return weatherInfo.value?.sys.sunset
+  return new Date(weatherInfo.value?.sys.sunset * 1000).toLocaleTimeString('ru-Ru')
 })
 
 const sunRise = computed(() => {
-  return weatherInfo.value?.sys.sunrise
+  return new Date(weatherInfo.value?.sys.sunrise * 1000).toLocaleTimeString('ru-RU')
 })
+
 const wind = computed(() => {
   return `${weatherInfo.value?.wind?.speed} m/sec`
 })
+
 const realFeel = computed(() => {
   return `${Math.round(weatherInfo.value?.main?.feels_like)}`
 })
+
 const clouds = computed(() => {
   return `${weatherInfo.value?.clouds?.all} %`
 })
+
 const visibility = computed(() => {
   return `${weatherInfo.value?.visibility / 1000} km`
 })
 
 const objectCard = ref({
-  sunSet: {
-    icon: `<svg width="95px" height="95px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<path fill="#000" d="M10 3h-1v-2h-2v2h-1l2 3 2-3z"></path>
-<path fill="#000" d="M14 13l-1.58-1.18 0.78-1.82-2-0.23-0.2-1.97-1.82 0.78-1.18-1.58-1.18 1.58-1.82-0.78-0.23 2-1.97 0.2 0.78 1.82-1.58 1.18h-2v1h16v-1h-2zM4 13c0.075-2.178 1.822-3.925 3.993-4 2.185 0.075 3.932 1.821 4.007 3.993l-8 0.007z"></path>
-</svg>`,
-    title: 'Sun Set',
-    text: sunSet
-  },
   sunRise: {
     icon: `<svg width="95px" height="95px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <path fill="#000" d="M6 4h1v2h2v-2h1l-2-3-2 3z"></path>
@@ -54,6 +51,14 @@ const objectCard = ref({
 </svg>`,
     title: 'Sun Rise',
     text: sunRise
+  },
+  sunSet: {
+    icon: `<svg width="95px" height="95px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<path fill="#000" d="M10 3h-1v-2h-2v2h-1l2 3 2-3z"></path>
+<path fill="#000" d="M14 13l-1.58-1.18 0.78-1.82-2-0.23-0.2-1.97-1.82 0.78-1.18-1.58-1.18 1.58-1.82-0.78-0.23 2-1.97 0.2 0.78 1.82-1.58 1.18h-2v1h16v-1h-2zM4 13c0.075-2.178 1.822-3.925 3.993-4 2.185 0.075 3.932 1.821 4.007 3.993l-8 0.007z"></path>
+</svg>`,
+    title: 'Sun Set',
+    text: sunSet
   },
   wind: {
     icon: `<svg class="feather feather-wind" fill="none" height="95" width="95" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>`,
@@ -99,19 +104,35 @@ onMounted(getWeather)
 </script>
 
 <template>
-  <main class="main rounded-xl flex">
-    <WeatherSummary
-      :weatherInfo="weatherInfo"
-      v-model:inputCity="locationCity"
-      @get-city="getWeather"
-    />
-    <div class="p-7 grid grid-cols-12 grid-rows-2 justify-items-center gap-y-6 w-3/4">
-      <CardInfoWeather
-        class="col-span-4"
-        v-for="(item, index) in objectCard"
-        :key="index"
-        :itemInfo="item"
+  <main class="main rounded-xl">
+    <div v-if="weatherInfo?.cod == 200" class="flex h-full">
+      <WeatherSummary
+        :weatherInfo="weatherInfo"
+        v-model:inputCity="locationCity"
+        @get-city="getWeather"
       />
+      <div class="p-7 grid grid-cols-12 grid-rows-2 justify-items-center gap-y-6 w-3/4">
+        <CardInfoWeather
+          class="col-span-4"
+          v-for="(item, index) in objectCard"
+          :key="index"
+          :itemInfo="item"
+        />
+      </div>
+    </div>
+    <div class="bg-white h-full rounded-xl p-10" v-else>
+      <input
+        class="w-full p-1 border-b border-gray-800 text-center outline-none"
+        type="text"
+        name="ErrorSearch"
+        id="ErrorSearch"
+        v-model="locationCity"
+        @keyup.enter="getWeather"
+        placeholder="Search City"
+      />
+      <div class="flex items-center justify-center h-full">
+        <h1 class="text-6xl font-bold text-gray-700">{{ weatherInfo?.message }}</h1>
+      </div>
     </div>
   </main>
 </template>
