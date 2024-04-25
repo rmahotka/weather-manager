@@ -55,7 +55,7 @@ const emit = defineEmits(['getCity'])
     <div class="flex flex-col justify-around h-full">
       <div class="relative">
         <img
-          :src="`./src/assets/img/weather-main/${weatherInfo?.weather[0]?.description}.png`"
+          :src="`@/assets/img/weather-main/${weatherInfo?.weather[0]?.description}.png`"
           alt=""
           class="w-52 h-52"
         />
