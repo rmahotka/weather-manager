@@ -54,11 +54,7 @@ const emit = defineEmits(['getCity'])
     </div>
     <div class="flex flex-col justify-around h-full">
       <div class="relative">
-        <img
-          :src="`@/assets/img/weather-main/${weatherInfo?.weather[0]?.description}.png`"
-          alt=""
-          class="w-52 h-52"
-        />
+        <img :src="`/img/${weatherInfo?.weather[0]?.description}.png`" alt="" class="w-52 h-52" />
         <p class="text-9xl font-semibold absolute bottom-16 right-3 opacity-75 text-gray-950">
           <span>{{ Math.round(weatherInfo?.main?.temp) }}<sup class="ml-2">ͦ</sup></span>
         </p>
